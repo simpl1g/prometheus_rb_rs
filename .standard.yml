@@ -1,0 +1,12 @@
+# For available configuration options, see:
+#   https://github.com/standardrb/standard
+ruby_version: 3.3
+
+fix: true               # default: false
+parallel: true          # default: false
+
+ignore:                 # default: []
+  - 'vendor/**/*'
+
+plugins:                # default: []
+  - standard-performance

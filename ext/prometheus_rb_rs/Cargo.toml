@@ -1,0 +1,13 @@
+[package]
+name = "prometheus_rb_rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["Konstantin Ilchenko <konstantin@ilchenko.by>"]
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+magnus = "0.7"
+prometheus = "0.13.4"

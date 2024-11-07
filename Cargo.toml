@@ -1,0 +1,6 @@
+[workspace]
+members = ["ext/prometheus_rb_rs"]
+resolver = "2"
+
+[profile.release]
+strip = true

@@ -1,0 +1,31 @@
+PATH
+  remote: ../..
+  specs:
+    prometheus_rb_rs (0.2.0)
+      rb_sys
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    base64 (0.2.0)
+    prometheus-client (4.2.3)
+      base64
+    rack (3.1.8)
+    rackup (2.2.0)
+      rack (>= 3)
+    rage-iodine (4.0.0)
+    rb_sys (0.9.102)
+
+PLATFORMS
+  arm64-darwin-23
+  ruby
+
+DEPENDENCIES
+  prometheus-client
+  prometheus_rb_rs!
+  rack
+  rackup
+  rage-iodine
+
+BUNDLED WITH
+   2.5.23

@@ -1,0 +1,42 @@
+name: release
+on: workflow_dispatch
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: x86_64-linux
+            target: x86_64-unknown-linux-gnu
+          - platform: x86_64-linux-musl
+            target: x86_64-unknown-linux-musl
+          - platform: aarch64-linux
+            target: aarch64-unknown-linux-gnu
+          - platform: aarch64-linux-musl
+            target: aarch64-unknown-linux-musl
+          - platform: x86_64-darwin
+            target: x86_64-apple-darwin
+            # Rust uses external command to strip symbols and debuginfo on Mac
+            # Do not do for arm64 since it interferes with code signing
+            # and codesign binary is not present to re-sign
+            setup: sudo ln -s /opt/osxcross/target/bin/x86_64-apple-darwin-strip /usr/local/bin/strip
+          - platform: arm64-darwin
+            target: aarch64-apple-darwin
+          - platform: x64-mingw-ucrt
+            target: x86_64-pc-windows-gnu
+    runs-on: ubuntu-latest
+    name: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+      - uses: oxidize-rb/actions/cross-gem@v1
+        id: cross-gem
+        with:
+          platform: ${{ matrix.platform }}
+          ruby-versions: "3.3,3.2,3.1"
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cross-gem
+          path: ${{ steps.cross-gem.outputs.gem-path }}

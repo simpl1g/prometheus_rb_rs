@@ -1,0 +1,16 @@
+{
+    "[rust]": {
+        "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    },
+    "[ruby]": {
+        "editor.defaultFormatter": "Shopify.ruby-lsp",
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+    },
+    "rubyLsp.formatter": "standard",
+    "rubyLsp.linters": [
+        "standard"
+    ],
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true
+}

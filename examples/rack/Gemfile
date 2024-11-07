@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem "prometheus_rb_rs", path: "../../"
+gem "rack"
+gem "rackup"
+gem "rage-iodine"
+gem "prometheus-client"
