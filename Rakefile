@@ -6,21 +6,8 @@ RSpec::Core::RakeTask.new(:spec)
 
 require "standard/rake"
 require "bundler/gem_tasks"
-require "rake/testtask"
 require "rake/extensiontask"
 require "rb_sys/extensiontask"
-
-task build: :compile
-task default: :test
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList["test/**/*_test.rb"].exclude(/docs_test/)
-end
-
-Rake::TestTask.new("test:docs") do |t|
-  t.libs << "test"
-  t.pattern = "test/docs_test.rb"
-end
 
 platforms = [
   "x86_64-linux",
@@ -33,7 +20,7 @@ platforms = [
 ]
 
 gemspec = Bundler.load_gemspec("prometheus_rb_rs.gemspec")
-RbSys::ExtensionTask.new("prometheus_rb_rs", gemspec) do |ext|
+Rake::ExtensionTask.new("prometheus_rb_rs", gemspec) do |ext|
   ext.lib_dir = "lib/prometheus_rb_rs"
   ext.cross_compile = true
   ext.cross_platform = platforms
@@ -41,10 +28,6 @@ RbSys::ExtensionTask.new("prometheus_rb_rs", gemspec) do |ext|
     spec.dependencies.reject! { |dep| dep.name == "rb_sys" }
     spec.files.reject! { |file| File.fnmatch?("ext/*", file, File::FNM_EXTGLOB) }
   end
-end
-
-task :fmt do
-  sh "cargo", "fmt"
 end
 
 task :remove_ext do
@@ -64,5 +47,9 @@ task :native_all do
   end
 end
 
-task build: :compile
+task fmt: "standard:fix" do
+  sh "cargo", "fmt"
+end
+
 task default: %i[compile spec standard]
+task build: :compile
