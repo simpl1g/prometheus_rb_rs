@@ -22,7 +22,7 @@ module PrometheusRbRs
 
       def call(env)
         if metrics_port?(env["SERVER_PORT"]) && env["PATH_INFO"] == @path
-          [200, {"content-type" => CONTENT_TYPE}, [@registry.values]]
+          [200, {"content-type" => CONTENT_TYPE}, [@registry.to_text]]
         else
           @app.call(env)
         end

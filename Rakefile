@@ -8,6 +8,7 @@ require "standard/rake"
 require "bundler/gem_tasks"
 require "rake/testtask"
 require "rake/extensiontask"
+require "rb_sys/extensiontask"
 
 task build: :compile
 task default: :test
@@ -32,7 +33,7 @@ platforms = [
 ]
 
 gemspec = Bundler.load_gemspec("prometheus_rb_rs.gemspec")
-Rake::ExtensionTask.new("prometheus_rb_rs", gemspec) do |ext|
+RbSys::ExtensionTask.new("prometheus_rb_rs", gemspec) do |ext|
   ext.lib_dir = "lib/prometheus_rb_rs"
   ext.cross_compile = true
   ext.cross_platform = platforms
@@ -42,11 +43,26 @@ Rake::ExtensionTask.new("prometheus_rb_rs", gemspec) do |ext|
   end
 end
 
+task :fmt do
+  sh "cargo", "fmt"
+end
+
 task :remove_ext do
   path = "lib/prometheus_rb_rs/prometheus_rb_rs.bundle"
   File.unlink(path) if File.exist?(path)
 end
-
 Rake::Task["build"].enhance [:remove_ext]
 
+desc "Build native extension for a given platform (i.e. `rake 'native[x86_64-linux]'`)"
+task :native, [:platform] do |_t, platform:|
+  sh "bundle", "exec", "rb-sys-dock", "--platform", platform, "--build"
+end
+
+task :native_all do
+  platforms.each do |platform|
+    sh "bundle", "exec", "rb-sys-dock", "--platform", platform, "-r", "3.1,3.2,3.3", "--build"
+  end
+end
+
+task build: :compile
 task default: %i[compile spec standard]

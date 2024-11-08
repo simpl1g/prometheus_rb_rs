@@ -16,9 +16,6 @@ Gem::Specification.new do |spec|
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
-  spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://github.com/simpl1g/prometheus_rb_rs"
-
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   gemspec = File.basename(__FILE__)
@@ -33,5 +30,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.extensions = ["ext/prometheus_rb_rs/extconf.rb"]
 
-  spec.add_dependency "rb_sys"
+  spec.add_dependency "rb_sys", "~> 0.9"
 end

@@ -20,7 +20,7 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
         "register_histogram",
         method!(MutPrometheusRbRs::register_histogram, -1),
     )?;
-    class.define_method("values", method!(MutPrometheusRbRs::values, 0))?;
+    class.define_method("to_text", method!(MutPrometheusRbRs::to_text, 0))?;
     // PrometheusRbRs::Histogram
     let class = module.define_class("Histogram", ruby.class_object())?;
     class.define_singleton_method("new", function!(histogram::Histogram::new, -1))?;
@@ -68,7 +68,7 @@ impl MutPrometheusRbRs {
         Ok(hist)
     }
 
-    pub fn values(ruby: &Ruby, rb_self: &MutPrometheusRbRs) -> Result<String, Error> {
+    pub fn to_text(ruby: &Ruby, rb_self: &MutPrometheusRbRs) -> Result<String, Error> {
         let encoder = TextEncoder::new();
         let mut buffer = vec![];
         let metric_families = rb_self.0.borrow().registry.gather();

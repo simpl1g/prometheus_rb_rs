@@ -35,7 +35,7 @@ RSpec.describe PrometheusRbRs do
     it "can observe histogram with float value" do
       histogram.observe(0.1)
 
-      expect(registry.values).to eq <<~TEXT
+      expect(registry.to_text).to eq <<~TEXT
         # HELP test_histogram Test Histogram
         # TYPE test_histogram histogram
         test_histogram_bucket{le="0.1"} 1
@@ -50,7 +50,7 @@ RSpec.describe PrometheusRbRs do
     it "can observe histogram with value large than max bucket" do
       histogram.observe(1)
 
-      expect(registry.values).to eq <<~TEXT
+      expect(registry.to_text).to eq <<~TEXT
         # HELP test_histogram Test Histogram
         # TYPE test_histogram histogram
         test_histogram_bucket{le="0.1"} 0
@@ -66,7 +66,7 @@ RSpec.describe PrometheusRbRs do
       histogram = registry.register_histogram("test_histogram", "Test Histogram")
       histogram.observe(0.01)
 
-      expect(registry.values).to eq <<~TEXT
+      expect(registry.to_text).to eq <<~TEXT
         # HELP test_histogram Test Histogram
         # TYPE test_histogram histogram
         test_histogram_bucket{le="0.005"} 0
@@ -92,7 +92,7 @@ RSpec.describe PrometheusRbRs do
       it "can observe histogram with labels" do
         histogram.observe(0.1, labels: {"status" => "200"})
 
-        expect(registry.values).to eq <<~TEXT
+        expect(registry.to_text).to eq <<~TEXT
           # HELP test_histogram Test Histogram
           # TYPE test_histogram histogram
           test_histogram_bucket{status="200",le="0.1"} 1
@@ -112,7 +112,7 @@ RSpec.describe PrometheusRbRs do
         histogram.observe(0.5, labels: {"status" => "404"})
         histogram.observe(1, labels: {"status" => "404"})
 
-        expect(registry.values).to eq <<~TEXT
+        expect(registry.to_text).to eq <<~TEXT
           # HELP test_histogram Test Histogram
           # TYPE test_histogram histogram
           test_histogram_bucket{status="200",le="0.1"} 1
@@ -137,7 +137,7 @@ RSpec.describe PrometheusRbRs do
       it "can observe histogram with preset labels" do
         histogram.observe(0.1)
 
-        expect(registry.values).to eq <<~TEXT
+        expect(registry.to_text).to eq <<~TEXT
           # HELP test_histogram Test Histogram
           # TYPE test_histogram histogram
           test_histogram_bucket{op="db",le="0.005"} 0
@@ -170,7 +170,7 @@ RSpec.describe PrometheusRbRs do
       it "can observe histogram with all labels" do
         histogram.observe(1, labels: {"status" => "200"})
 
-        expect(registry.values).to eq <<~TEXT
+        expect(registry.to_text).to eq <<~TEXT
           # HELP test_histogram Test Histogram
           # TYPE test_histogram histogram
           test_histogram_bucket{op="db",status="200",le="0.005"} 0
@@ -212,7 +212,7 @@ RSpec.describe PrometheusRbRs do
     it "can increment counter with int value" do
       counter.observe(2)
 
-      expect(registry.values).to eq <<~TEXT
+      expect(registry.to_text).to eq <<~TEXT
         # HELP test_counter Test Counter
         # TYPE test_counter counter
         test_counter 2
@@ -222,7 +222,7 @@ RSpec.describe PrometheusRbRs do
     it "can increment counter with float value" do
       counter.observe(3.0)
 
-      expect(registry.values).to eq <<~TEXT
+      expect(registry.to_text).to eq <<~TEXT
         # HELP test_counter Test Counter
         # TYPE test_counter counter
         test_counter 3
@@ -232,7 +232,7 @@ RSpec.describe PrometheusRbRs do
     it "can increment counter with default" do
       counter.observe
 
-      expect(registry.values).to eq <<~TEXT
+      expect(registry.to_text).to eq <<~TEXT
         # HELP test_counter Test Counter
         # TYPE test_counter counter
         test_counter 1

@@ -6,9 +6,9 @@ TODO:
 - [ ] docs
     - [ ] yard
     - [ ] rust yard
-- [ ] examples
-    - [ ] simple
-    - [ ] rack
+- [x] examples
+    - [x] simple
+    - [x] rack middleware
 - [ ] Thread/Fiber tests
 - [ ] releases
     - [ ] prebuilt binaries
@@ -17,7 +17,7 @@ TODO:
     - [x] Histogram
     - [ ] Gauge
     - [ ] Summary
-- [ ] formatters
+- [x] formatters
     - [x] Text
 - [x] middleware
 - [ ] method profiler
