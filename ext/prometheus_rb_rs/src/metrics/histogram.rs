@@ -4,7 +4,6 @@ use magnus::{
     scan_args::{get_kwargs, scan_args},
     wrap, Error, Ruby, Value,
 };
-// use prometheus::HistogramVec;
 
 #[wrap(class = "PrometheusRbRs::Histogram")]
 pub struct Histogram {

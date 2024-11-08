@@ -1,7 +1,7 @@
-mod counter;
-mod histogram;
+mod metrics;
 
 use magnus::{function, method, prelude::*, wrap, Error, Ruby, Value};
+use metrics::{counter::Counter, histogram::Histogram};
 use prometheus::{core::Collector, Encoder, Registry, TextEncoder};
 use std::cell::RefCell;
 
@@ -23,12 +23,12 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
     class.define_method("to_text", method!(MutPrometheusRbRs::to_text, 0))?;
     // PrometheusRbRs::Histogram
     let class = module.define_class("Histogram", ruby.class_object())?;
-    class.define_singleton_method("new", function!(histogram::Histogram::new, -1))?;
-    class.define_method("observe", method!(histogram::Histogram::observe, -1))?;
+    class.define_singleton_method("new", function!(Histogram::new, -1))?;
+    class.define_method("observe", method!(Histogram::observe, -1))?;
     // PrometheusRbRs::Counter
     let class = module.define_class("Counter", ruby.class_object())?;
-    class.define_singleton_method("new", function!(counter::Counter::new, -1))?;
-    class.define_method("observe", method!(counter::Counter::observe, -1))?;
+    class.define_singleton_method("new", function!(Counter::new, -1))?;
+    class.define_method("observe", method!(Counter::observe, -1))?;
 
     Ok(())
 }
@@ -50,8 +50,8 @@ impl MutPrometheusRbRs {
         ruby: &Ruby,
         rb_self: &MutPrometheusRbRs,
         args: &[Value],
-    ) -> Result<counter::Counter, Error> {
-        let counter = counter::Counter::new(ruby, args)?;
+    ) -> Result<Counter, Error> {
+        let counter = Counter::new(ruby, args)?;
         rb_self.register(Box::new(counter.internal()), ruby)?;
 
         Ok(counter)
@@ -61,8 +61,8 @@ impl MutPrometheusRbRs {
         ruby: &Ruby,
         rb_self: &MutPrometheusRbRs,
         args: &[Value],
-    ) -> Result<histogram::Histogram, Error> {
-        let hist = histogram::Histogram::new(ruby, args)?;
+    ) -> Result<Histogram, Error> {
+        let hist = Histogram::new(ruby, args)?;
         rb_self.register(Box::new(hist.internal()), ruby)?;
 
         Ok(hist)
